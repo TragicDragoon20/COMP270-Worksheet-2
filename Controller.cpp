@@ -13,12 +13,10 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 
 	const Vector2 displacement = enemyPos - tankPos;
 	
-	const float initialVelocity = sqrt((displacement.x * (0.5 * gravity)) / (cos(shotAngleRadians) * sin(shotAngleRadians)));
-
-	//float initialVelocity = ((displacement.x * gravity) / cos(shotAngleRadians)) + sqrt(4 * 0.5 * gravity * displacement.y);
-
-	//float initialVelocity2 = (((displacement.x * gravity * sin(shotAngleRadians)) / cos(shotAngleRadians)) + sqrt(4 * 0.5 * gravity * displacement.y) / sin(shotAngleRadians)) / 2;
+	//const float initialVelocity = sqrt((displacement.x * (0.5 * gravity)) / (cos(shotAngleRadians) * sin(shotAngleRadians)));
 	
+	const float initialVelocity =sqrt ((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2)  * ((tankPos.y - enemyPos.y) - tan(shotAngleRadians) * displacement.x)));
+ 	
 	return initialVelocity;
 	
 }
