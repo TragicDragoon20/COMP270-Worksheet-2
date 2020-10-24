@@ -12,11 +12,39 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	// TODO: calculate the required shot speed (in pixels per second) and return it
 
 	const Vector2 displacement = enemyPos - tankPos;
-	
+	/**
+	 *Part 1:
+	 * Solve Sx = ut ++ 1/2at^2 with a = 0
+	 * Sx = ut
+	 * rearrange for t = Sx/Ucos(x)
+	 * Sub the reaaranged t value into Sy = ut + 1/2at^2 
+	 * Sy = usin(x) * Sx/ucos(x) + 1/2 * -g * (Sx/ucos(x))^2
+	 * as Sy = 0 can reaarange for 1/2 * g * (Sx/ucos(x))^2 = usin(x) * Sx/ucos(x)
+	 * Divide t for each side
+	 * 1/2 * g * Sx/ucos(x) = usin(x)
+	 * times by u to get rid off u on the left and get u^2 on the right hand side also divide by sin(x) to get just u^2 on the right hand side
+	 * Then sqrt the result to get u =
+	 * u = sqrt(1/2 * g * Sx / cos(x) * sin(x))
+	 */
 	//const float initialVelocity = sqrt((displacement.x * (0.5 * gravity)) / (cos(shotAngleRadians) * sin(shotAngleRadians)));
+
+	/**
+	 * taking the same t value as in part 1
+	 * Sub t into Sy = ut + 1/2at^2
+	 * Sy = usin(x) * Sx/ucos(x) + 1/2 * -g * (Sx/ucos(x))^2
+	 * as sin/cos = tan we can use this identity in the formula
+	 * Sy = tan(x) * Sx + 1/2 * -g * (Sx/ucos(x))^2
+	 * minus tan(x) * Sx on both sides and times by (ucos(x))^2
+	 * (Ucos(x))^2(Sy - tan(x) * Sx = 1/2 * -g * Sx^2
+	 * Divide by Sy - tan(x) to get it onto the right hand side and off the left side
+	 * (Ucos(x))^2 = 1/2 * -g * Sx^2 / Sy - tan(x)
+	 * Do the same again but divide by (ucos(x))^2 and sqrt the end result to get u = 
+	 * u = sqrt(-g * Sx^2 / 2 * cos(x)^2 * Sy - tan(x)
+	 */
+	//const float initialVelocity =sqrt ((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2)  * (-displacement.y - tan(shotAngleRadians) * displacement.x)));
+
+	const float initialVelocity = ((pow(displacement.y, 2) * pow(wind, 2)) - (2 * pow(displacement.y, 2 * pow(displacement.x, 3 * pow(wind, 2))))) / pow(cos(shotAngleRadians), 2);
 	
-	const float initialVelocity =sqrt ((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2)  * ((tankPos.y - enemyPos.y) - tan(shotAngleRadians) * displacement.x)));
- 	
 	return initialVelocity;
 	
 }
