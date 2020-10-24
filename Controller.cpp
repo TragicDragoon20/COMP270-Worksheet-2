@@ -17,7 +17,7 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	 * Solve Sx = ut ++ 1/2at^2 with a = 0
 	 * Sx = ut
 	 * rearrange for t = Sx/Ucos(x)
-	 * Sub the reaaranged t value into Sy = ut + 1/2at^2 
+	 * Sub the rearrange t value into Sy = ut + 1/2at^2 
 	 * Sy = usin(x) * Sx/ucos(x) + 1/2 * -g * (Sx/ucos(x))^2
 	 * as Sy = 0 can reaarange for 1/2 * g * (Sx/ucos(x))^2 = usin(x) * Sx/ucos(x)
 	 * Divide t for each side
@@ -26,6 +26,7 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	 * Then sqrt the result to get u =
 	 * u = sqrt(1/2 * g * Sx / cos(x) * sin(x))
 	 */
+	// Part 1 formula
 	//const float initialVelocity = sqrt((displacement.x * (0.5 * gravity)) / (cos(shotAngleRadians) * sin(shotAngleRadians)));
 
 	/**
@@ -41,10 +42,16 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	 * Do the same again but divide by (ucos(x))^2 and sqrt the end result to get u = 
 	 * u = sqrt(-g * Sx^2 / 2 * cos(x)^2 * Sy - tan(x)
 	 */
-	//const float initialVelocity =sqrt ((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2)  * (-displacement.y - tan(shotAngleRadians) * displacement.x)));
+	// Part 2 formula 
+	const float initialVelocity =sqrt ((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2)  * (-displacement.y - tan(shotAngleRadians) * displacement.x)));
 
-	const float initialVelocity = ((pow(displacement.y, 2) * pow(wind, 2)) - (2 * pow(displacement.y, 2 * pow(displacement.x, 3 * pow(wind, 2))))) / pow(cos(shotAngleRadians), 2);
-	
+	/**
+	 * Part 3
+	 * With wind being added it means that our previous values for t wont work
+	 * so when we rearrange for t we get a quadratic equation
+	 * put this into Sy = ut + 1/2 at^2
+	 * After this point I struggle trying to rearrange the equation
+	 */
 	return initialVelocity;
 	
 }
