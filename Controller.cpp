@@ -12,8 +12,9 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	// TODO: calculate the required shot speed (in pixels per second) and return it
 
 	const Vector2 displacement = enemyPos - tankPos;
+	const float alpha = ((displacement.x * -gravity) + ((-displacement.y) * wind));
 	/**
-	 *Part 1:
+	 * Part 1:
 	 * Solve Sx = ut ++ 1/2at^2 with a = 0
 	 * Sx = ut
 	 * rearrange for t = Sx/Ucos(x)
@@ -30,6 +31,7 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	//const float initialVelocity = sqrt((displacement.x * (0.5 * gravity)) / (cos(shotAngleRadians) * sin(shotAngleRadians)));
 
 	/**
+	* Part 2
 	 * taking the same t value as in part 1
 	 * Sub t into Sy = ut + 1/2at^2
 	 * Sy = usin(x) * Sx/ucos(x) + 1/2 * -g * (Sx/ucos(x))^2
@@ -43,16 +45,17 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	 * u = sqrt(-g * Sx^2 / 2 * cos(x)^2 * Sy - tan(x)
 	 */
 	// Part 2 formula 
-	const float initialVelocity =sqrt ((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2)  * (-displacement.y - tan(shotAngleRadians) * displacement.x)));
+	const float initialVelocity = sqrt((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2) * (-displacement.y - tan(shotAngleRadians) * displacement.x)));
 
 	/**
 	 * Part 3
-	 * With wind being added it means that our previous values for t wont work
-	 * so when we rearrange for t we get a quadratic equation
-	 * put this into Sy = ut + 1/2 at^2
-	 * After this point I struggle trying to rearrange the equation
+	 * Use similtanious equatiosns and time Sx by gravity and Sy by w
+	 * + one away from the other to get Sx*gravity + Sy*wind / ucosx*gravity + usinx*wind = t
 	 */
-	return initialVelocity;
+
+	//const float initialVelocity = sqrt((-gravity * (pow(displacement.y, 2) * pow(wind, 2) + pow(displacement.x, 2) * pow(gravity, 2) + 2 * displacement.x * -displacement.y * gravity * wind)) / (2 * (wind * sin(shotAngleRadians) + gravity * cos(shotAngleRadians)) * -displacement.y * (wind * sin(shotAngleRadians) + gravity * cos(shotAngleRadians)) - sin(shotAngleRadians) * (-displacement.y * wind + displacement.x * -gravity)));
+
+ 	return initialVelocity;
 	
 }
 
