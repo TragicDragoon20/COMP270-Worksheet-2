@@ -12,7 +12,6 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	// TODO: calculate the required shot speed (in pixels per second) and return it
 
 	const Vector2 displacement = enemyPos - tankPos;
-	const float alpha = ((displacement.x * -gravity) + ((-displacement.y) * wind));
 	/**
 	 * Part 1:
 	 * Solve Sx = ut ++ 1/2at^2 with a = 0
@@ -34,7 +33,7 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	* Part 2
 	 * taking the same t value as in part 1
 	 * Sub t into Sy = ut + 1/2at^2
-	 * Sy = usin(x) * Sx/ucos(x) + 1/2 * -g * (Sx/ucos(x))^2
+	 * Sy = usin(x) * Sx / ucos(x) + 1/2 * -g * (Sx/ucos(x))^2
 	 * as sin/cos = tan we can use this identity in the formula
 	 * Sy = tan(x) * Sx + 1/2 * -g * (Sx/ucos(x))^2
 	 * minus tan(x) * Sx on both sides and times by (ucos(x))^2
@@ -45,16 +44,24 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	 * u = sqrt(-g * Sx^2 / 2 * cos(x)^2 * Sy - tan(x)
 	 */
 	// Part 2 formula 
-	const float initialVelocity = sqrt((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2) * (-displacement.y - tan(shotAngleRadians) * displacement.x)));
+	//const float initialVelocity = sqrt((-gravity * pow(displacement.x, 2)) / (2 * pow(cos(shotAngleRadians), 2) * (-displacement.y - tan(shotAngleRadians) * displacement.x)));
 
 	/**
 	 * Part 3
-	 * Use similtanious equatiosns and time Sx by gravity and Sy by w
-	 * + one away from the other to get Sx*gravity + Sy*wind / ucosx*gravity + usinx*wind = t
+	 * Use similtanious equatiosns and times the Sx eqation by gravity and the Sy equation by wind
+	 * add them together other to get Sx*gravity + Sy*wind = gravity * u * cos(x) * t + wind * u * sin(x) * t
+	 * Rearrange for t = gravity * Sx + wind * Sy / u * (gravity * cos(x) + wind * sin(x))
+	 * Use lets say a = gravity * Sx + wind * Sy / gravity * cos(x) + wind * sin(x)
+	 * Therfore t = a / u
+	 * Plug this back into the Sy Equation
+	 * Sy = u * a *sin(x) / u - gravity * a^2 / 2 * u^2
+	 * rearrange to get u^2 = gravity * a^2 / 2(a * sin(x) - Sy)
+	 * then square root the formula to get u
 	 */
 
-	//const float initialVelocity = sqrt((-gravity * (pow(displacement.y, 2) * pow(wind, 2) + pow(displacement.x, 2) * pow(gravity, 2) + 2 * displacement.x * -displacement.y * gravity * wind)) / (2 * (wind * sin(shotAngleRadians) + gravity * cos(shotAngleRadians)) * -displacement.y * (wind * sin(shotAngleRadians) + gravity * cos(shotAngleRadians)) - sin(shotAngleRadians) * (-displacement.y * wind + displacement.x * -gravity)));
-
+	const float alpha = (gravity * displacement.x + wind * -displacement.y) / (gravity * cos(shotAngleRadians) + wind * sin(shotAngleRadians));
+	
+	const float initialVelocity = sqrt((gravity * pow(alpha, 2)) / (2 * (alpha * sin(shotAngleRadians) - -displacement.y)));
  	return initialVelocity;
 	
 }
