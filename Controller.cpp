@@ -25,8 +25,13 @@ float Controller::calculateShotSpeed(const Vector2& tankPos, const Vector2& enem
 	 * times by u to get rid off u on the left and get u^2 on the right hand side also divide by sin(x) to get just u^2 on the right hand side
 	 * Then sqrt the result to get u =
 	 * u = sqrt(1/2 * g * Sx / cos(x) * sin(x))
+	 * as 1/2 * g = g / 2
+	 * we can reaarange this to be
+	 * u = sqrt(g * Sx / 2 * cos(x) * sin(x))
+	 * using trig identities we can chenge the bottom to be sin(2x)
+	 * Therefore u = sqrt(g * Sx / sin(2x)
 	 */
-	//const float initialVelocity = sqrt((displacement.x * (0.5 * gravity)) / (cos(shotAngleRadians) * sin(shotAngleRadians)));
+	// const float initialVelocity = sqrt((displacement.x *  gravity) / sin(2 * shotAngleRadians));
 
 	/**
 	* Part 2
